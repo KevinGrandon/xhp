@@ -38,10 +38,12 @@ abstract class :x:base {
   public static $ENABLE_VALIDATION = true;
 
   final protected static function renderChild($child) {
-    if ($child instanceof :x:base) {
+	if ($child instanceof :x:base) {
       return $child->__toString();
     } else if ($child instanceof HTML) {
       return $child->render();
+    } else if ($child instanceof Wrap) {
+      return $child->getValue();
     } else if (is_array($child)) {
       throw new XHPRenderArrayException('Can not render array!');
     } else {
@@ -176,8 +178,7 @@ abstract class :x:composable-element extends :x:base {
 
     // Get the declaration on miss
     $decl = $this->__xhpAttributeDeclaration();
-
-    if (!isset($decl[$attr])) {
+    if (!isset($decl[$attr]) && !strstr($attr, 'data-')) {
       throw new XHPAttributeNotSupportedException($this, $attr);
     } else if (!empty($decl[$attr][3])) {
       throw new XHPAttributeRequiredException($this, $attr);
@@ -274,7 +275,7 @@ abstract class :x:composable-element extends :x:base {
    */
   final protected function validateAttributeValue($attr, &$val) {
     $decl = $this->__xhpAttributeDeclaration();
-    if (!isset($decl[$attr])) {
+    if (!isset($decl[$attr]) && !strstr($attr, 'data-')) {
       throw new XHPAttributeNotSupportedException($this, $attr);
     }
     if ($val === null) {
