@@ -38,12 +38,12 @@ abstract class :x:base {
   public static $ENABLE_VALIDATION = true;
 
   final protected static function renderChild($child) {
-	if ($child instanceof :x:base) {
+    if ($child instanceof :x:base) {
       return $child->__toString();
     } else if ($child instanceof HTML) {
       return $child->render();
-    } else if ($child instanceof Wrap) {
-      return $child->getValue();
+    } else if ($child instanceof XHP) {
+        return $child->getValue();
     } else if (is_array($child)) {
       throw new XHPRenderArrayException('Can not render array!');
     } else {
@@ -765,4 +765,25 @@ class XHPInvalidChildrenException extends XHPException {
       "Children received:\n".$that->__getChildrenDescription()
     );
   }
+}
+
+class XHP {
+
+	private $value = null;
+
+	function __construct($value) {
+		$this->value = $value;
+	}
+
+	public function __toString() {
+		return $this->value;
+	}
+
+	public function getValue() {
+		return $this->value;
+	}
+
+	static public function raw($value) {
+		return new self($value);
+	}
 }
