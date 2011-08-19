@@ -18,6 +18,7 @@
 abstract class :x:base {
   abstract public function __construct();
   abstract public function appendChild($child);
+  abstract public function append($child);
   abstract public function getAttribute($attr);
   abstract public function setAttribute($attr, $val);
   abstract public function categoryOf($cat);
@@ -136,6 +137,13 @@ abstract class :x:composable-element extends :x:base {
       $this->children[] = $child;
     }
     return $this;
+  }
+
+  /**
+   * Shortcut method for appendChild
+   */
+  final public function append($child) {
+	return $this->appendChild($child);  
   }
 
   /**
@@ -632,6 +640,10 @@ class :x:composite extends :x:base {
 
   public function appendChild($child) {
     return $this->anchor->appendChild($child);
+  }
+
+  public function append($child) {
+    return $this->appendChild($child);
   }
 
   public function getAttribute($attr) {
